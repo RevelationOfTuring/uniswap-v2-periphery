@@ -72,11 +72,18 @@ contract ExampleOracleSimple {
     }
 
     // note this will always return 0 before update has been called successfully for the first time.
+    // 输入目标token和对应数量，返回该数量基于对应TWAP的价值(用另外的一种token的数量表示)
     function consult(address token, uint amountIn) external view returns (uint amountOut) {
         if (token == token0) {
+            // 如果是token0，返回price0Average*amountIn的整数部分
+            // 注:返回price0Average为FixedPoint.uq112x112，即用低112位表示小数，高112位表示整数。
+            // price0Average.mul(amountIn)的返回值为uq144x112，即用低112位表示小数，高144位表示整数
+            // .decode144()的作用是将price0Average.mul(amountIn)的结果右移112位，即取其整数部分
             amountOut = price0Average.mul(amountIn).decode144();
         } else {
+            // 如果是token1。如果既不是token0也部署token1，会revert
             require(token == token1, 'ExampleOracleSimple: INVALID_TOKEN');
+            // 返回price1Average*amountIn的整数部分
             amountOut = price1Average.mul(amountIn).decode144();
         }
     }
