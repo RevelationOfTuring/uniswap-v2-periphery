@@ -46,7 +46,7 @@ contract ExampleOracleSimple {
         require(reserve0 != 0 && reserve1 != 0, 'ExampleOracleSimple: NO_RESERVES'); // ensure that there's liquidity in the pair
     }
 
-// 用于更新使用合约的内部记录时间及price0Cumulative的状态变量
+    // 用于更新使用合约的内部记录时间及price0Cumulative的状态变量
     function update() external {
         // 获取当前距离最近一次pair swap的时间间隔，及price0和price1的累计和
         (uint price0Cumulative, uint price1Cumulative, uint32 blockTimestamp) =
